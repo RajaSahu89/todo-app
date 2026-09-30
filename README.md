@@ -1,4 +1,4 @@
-# To Do App (deploy-ready)
+# To Do App
 Node.js server + REST API + web frontend. No dependencies, no install step. Accounts with private lists per user, light/dark mode.
 
 ## Run locally (1 terminal)
