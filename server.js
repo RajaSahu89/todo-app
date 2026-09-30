@@ -1,8 +1,7 @@
-// Zero-dependency full-stack server with accounts. Run: node server.js
 const http = require('http'), fs = require('fs'), path = require('path'), crypto = require('crypto');
 const PORT = process.env.PORT || 3000;
-const DIR = process.env.DATA_DIR || __dirname;           // put on a persistent disk in production
-const ORIGIN = process.env.ALLOW_ORIGIN || '*';          // set to your GitHub Pages URL if frontend is hosted separately
+const DIR = process.env.DATA_DIR || __dirname;         
+const ORIGIN = process.env.ALLOW_ORIGIN || '*';          
 fs.mkdirSync(DIR, { recursive: true });
 const DB = path.join(DIR, 'data.json'), PUB = path.join(__dirname, 'public');
 let db = { users: [], tasks: [], lists: [] };
