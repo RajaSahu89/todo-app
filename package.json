@@ -1,0 +1,1 @@
+{ "name": "todo-app", "version": "1.0.0", "description": "Full-stack To Do app (zero dependencies)", "main": "server.js", "scripts": { "start": "node server.js" } }

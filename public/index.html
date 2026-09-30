@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To Do</title>
+<style>
+:root{--bg:#F8FAFC;--panel:#FFFFFF;--card2:#F1F5F9;--side:#FFFFFF;--ink:#0F172A;--mute:#64748B;--line:#E2E8F0;--acc:#2563EB;--acc2:#7C3AED;--accent:#06B6D4;--acc-soft:rgba(37,99,235,.10);--red:#DC2626;--green:#16A34A;--warn:#F59E0B;--blue:#2563EB;--star:#F59E0B;--shadow:0 1px 2px rgba(15,23,42,.06)}
+[data-theme=dark]{--bg:#0B1120;--panel:#111827;--card2:#1E293B;--side:#111827;--ink:#F8FAFC;--mute:#94A3B8;--line:#334155;--acc:#3B82F6;--acc2:#8B5CF6;--accent:#22D3EE;--acc-soft:rgba(59,130,246,.18);--red:#EF4444;--green:#22C55E;--warn:#FBBF24;--blue:#3B82F6;--star:#FBBF24;--shadow:none}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--ink);display:flex;height:100vh}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+aside{width:270px;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px}
+.brand{display:flex;justify-content:space-between;align-items:center;padding:4px 10px 16px;font-size:20px;font-weight:700}
+.brand span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+#theme{border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:13px;background:var(--card2)}
+nav{overflow:auto;flex:1}
+.nav{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:8px;text-align:left}
+.nav:hover{background:var(--acc-soft)}
+.nav.on{background:var(--acc-soft);color:var(--acc);font-weight:600}
+.nav.on .ic{color:var(--acc2)}
+.nav .ic{width:20px;text-align:center}
+.nav .n{margin-left:auto;font-size:12px;color:var(--mute)}
+.nav .x{margin-left:auto;color:var(--mute);display:none}
+.nav:hover .x{display:block}.nav:hover .n+.x{display:none}
+hr{border:0;border-top:1px solid var(--line);margin:10px 0}
+#newlist{display:flex;gap:6px;margin-top:8px}
+#newlist input{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card2)}
+#newlist button,.add button{background:var(--acc);color:#fff;border-radius:8px;padding:8px 14px;font-weight:600}
+main{flex:1;overflow:auto;padding:32px clamp(16px,5vw,64px)}
+.wrap{max-width:760px;margin:0 auto}
+h1{margin:0;font-size:28px}
+.sub{color:var(--mute);margin:2px 0 20px}
+.add{display:flex;gap:8px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);margin-bottom:18px}
+.add input[type=text]{flex:1;min-width:180px;border:0;background:none;padding:8px;outline:0}
+.add input[type=date],.add select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card2)}
+.add select.fg-red{color:var(--red);border-color:var(--red)}.add select.fg-green{color:var(--green);border-color:var(--green)}.add select.fg-blue{color:var(--blue);border-color:var(--blue)}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);border-radius:999px;padding:4px 14px;background:var(--panel);font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.tabs .dot{width:8px;height:8px;border-radius:50%;background:var(--mute)}.tabs .dot.red{background:var(--red)}.tabs .dot.green{background:var(--green)}.tabs .dot.blue{background:var(--blue)}
+.tabs button.on .dot{box-shadow:0 0 0 2px #fff}
+.tabs button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.item{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.item.f-red{border-left-color:var(--red)}.item.f-green{border-left-color:var(--green)}.item.f-blue{border-left-color:var(--blue)}
+.chk{width:22px;height:22px;border:2px solid var(--mute);border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;color:#fff}
+.done .chk{background:var(--green);border-color:var(--green)}
+.done .t{text-decoration:line-through;color:var(--mute)}
+.body{flex:1;min-width:0}.t{overflow-wrap:anywhere}
+.meta{font-size:12px;color:var(--mute)}
+.ib{font-size:18px;color:var(--mute);padding:2px 6px;border-radius:6px}
+.ib:hover{background:var(--acc-soft)}
+.ib.star.on{color:var(--star)}
+.flag.red{color:var(--red)}.flag.green{color:var(--green)}.flag.blue{color:var(--blue)}.flag.none{color:var(--mute);opacity:.6}
+.chip{display:inline-block;font-size:11px;font-weight:600;padding:0 8px;border-radius:999px;border:1px solid currentColor;margin-left:2px}
+.chip.red{color:var(--red)}.chip.green{color:var(--green)}.chip.blue{color:var(--blue)}
+.overdue{color:var(--red);font-weight:600}.duetoday{color:var(--warn);font-weight:600}
+.nav .fd{width:8px;height:8px;border-radius:50%;background:transparent;flex:none}
+.empty{text-align:center;color:var(--mute);padding:48px 0}
+#auth{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:9;padding:16px}
+#auth[hidden]{display:none}
+#authform{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+#authform h2{margin:0}#authform .sub{margin:0 0 6px}
+#authform input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card2)}
+#aerr{color:var(--red);font-size:13px;margin:0;min-height:18px}
+#authform .row{display:flex;gap:8px}#authform button{flex:1;background:var(--acc);color:#fff;border-radius:8px;padding:10px;font-weight:600}
+#authform button.alt{background:var(--acc-soft);color:var(--acc2)}
+.user{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:12px;padding:12px 10px 0;font-size:13px;color:var(--mute)}
+.user button{color:var(--acc);font-weight:600}
+@media(max-width:720px){body{flex-direction:column;height:auto}aside{width:100%;border-right:0;border-bottom:1px solid var(--line)}nav{display:flex;flex-wrap:wrap;gap:4px}.nav{width:auto}hr{display:none}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><span>To Do</span> <button id="theme" aria-label="Toggle theme">Dark</button></div>
+  <nav id="nav"></nav>
+  <form id="newlist"><input id="ln" placeholder="New list" aria-label="New list name"><button>Add</button></form>
+  <div class="user"><span id="who"></span><button id="out">Sign out</button></div>
+</aside>
+<div id="auth" hidden><form id="authform"><h2>Welcome to To Do</h2><p class="sub">Sign in, or create an account to keep your own lists.</p>
+<input id="au" placeholder="Username" autocomplete="username" required><input id="ap" type="password" placeholder="Password (6+ characters)" autocomplete="current-password" required>
+<p id="aerr" role="alert"></p><div class="row"><button>Sign in</button><button type="button" id="reg" class="alt">Create account</button></div></form></div>
+<main><div class="wrap">
+  <h1 id="title"></h1><p class="sub" id="sub"></p>
+  <form class="add" id="add"></form>
+  <div class="tabs" id="tabs" hidden></div>
+  <div id="items"></div>
+</div></main>
+<script src="config.js"></script>
+<script>
+const VIEWS=[
+ {id:'myday',name:'My Day',ic:'☀',sub:'Focus on what you want to get done today.'},
+ {id:'important',name:'Important',ic:'★',sub:'Tasks you starred.'},
+ {id:'planned',name:'Planned',ic:'📅',sub:'Tasks with a due date.'},
+ {id:'assigned',name:'Assigned to me',ic:'👤',sub:'Work handed to you.'},
+ {id:'email',name:'Flagged email',ic:'⚑',sub:'Red = very important · Green = normal · Blue = average.'},
+ {id:'tasks',name:'Tasks',ic:'✔',sub:'Everything in one place.'}];
+const FLAGS={red:'Very important',green:'Normal',blue:'Average'};
+const FKEYS=Object.keys(FLAGS),FRANK={red:0,green:1,blue:2};
+const cap=k=>k[0].toUpperCase()+k.slice(1);
+let D={tasks:[],lists:[]},view='myday',fl='all';
+const $=s=>document.querySelector(s);
+const API=(window.API_BASE||'').replace(/\/$/,''),tok=()=>localStorage.getItem('token');
+async function api(m,u,b){
+  const r=await fetch(API+'/api/'+u,{method:m,headers:{'Content-Type':'application/json',...(tok()?{Authorization:'Bearer '+tok()}:{})},body:b&&JSON.stringify(b)});
+  if(r.status===401&&!/^(login|register)$/.test(u)){localStorage.removeItem('token');showAuth();throw new Error('auth')}
+  return r.json();
+}
+function showAuth(){$('#auth').hidden=false}
+async function authGo(kind){const r=await api('POST',kind,{username:$('#au').value,password:$('#ap').value});
+  if(r.token){localStorage.setItem('token',r.token);$('#ap').value='';$('#aerr').textContent='';load()}else $('#aerr').textContent=r.error||'Something went wrong.'}
+$('#authform').addEventListener('submit',e=>{e.preventDefault();authGo('login')});
+$('#reg').onclick=()=>authGo('register');
+$('#out').onclick=()=>{localStorage.removeItem('token');D={tasks:[],lists:[]};showAuth()};
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const filt={myday:t=>t.myDay,important:t=>t.important,planned:t=>t.due,assigned:t=>t.assigned,email:t=>t.type==='email',tasks:t=>t.type==='task'};
+const dueCls=d=>d<today()?'overdue':d===today()?'duetoday':'';
+const inView=(t,v)=>v.startsWith('l:')?t.listId===v.slice(2):filt[v](t);
+async function load(){if(!tok())return showAuth();try{D=await api('GET','data')}catch{return}$('#auth').hidden=true;$('#who').textContent=D.user;render()}
+function render(){
+  const all=[...VIEWS,...D.lists.map(l=>({id:'l:'+l.id,name:l.name,ic:'☰',custom:l.id,sub:'Your list. Flag any item: red = very important · green = normal · blue = average.'}))];
+  const cur=all.find(v=>v.id===view)||VIEWS[0];view=cur.id;
+  $('#nav').innerHTML=all.map((v,i)=>(i===VIEWS.length?'<hr>':'')+`<button class="nav ${v.id===view?'on':''}" data-v="${v.id}"><span class="ic">${v.ic}</span>${esc(v.name)}<span class="n">${D.tasks.filter(t=>!t.done&&inView(t,v.id)).length||''}</span>${v.custom?`<span class="x" data-del="${v.custom}" title="Delete list">✕</span>`:''}</button>`).join('');
+  $('#title').textContent=cur.name;$('#sub').textContent=cur.id==='myday'?new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}):cur.sub;
+  const em=view==='email';
+  $('#add').innerHTML=`<input type="text" id="in" placeholder="${em?'Email subject or sender':view==='planned'?'Plan something':'Add a task'}" aria-label="Title" autofocus>`+
+    (view==='planned'?`<input type="date" id="due" value="${today()}" aria-label="Due date">`:'')+
+    `<select id="fg" aria-label="Flag">${em?'':'<option value="">⚐ No flag</option>'}${FKEYS.map(k=>`<option value="${k}">⚑ ${cap(k)} – ${FLAGS[k]}</option>`).join('')}</select>`+'<button>Add</button>';
+  const fg=$('#fg');const sync=()=>{fg.className=fg.value?'fg-'+fg.value:''};fg.onchange=sync;sync();
+  const tabs=$('#tabs');tabs.hidden=false;
+  const inV=D.tasks.filter(t=>inView(t,view)),cnt=k=>k==='all'?inV.length:inV.filter(t=>t.flag===k).length;
+  tabs.innerHTML=['all',...FKEYS].map(k=>`<button class="${fl===k?'on':''}" data-f="${k}"><span class="dot ${k==='all'?'':k}"></span>${k==='all'?'All':cap(k)} <span style="opacity:.7">${cnt(k)}</span></button>`).join('');
+  let items=inV.slice();
+  if(fl!=='all')items=items.filter(t=>t.flag===fl);
+  items.sort((a,b)=>(a.done-b.done)||((FRANK[a.flag]??3)-(FRANK[b.flag]??3)));
+  $('#items').innerHTML=items.length?items.map(t=>`<div class="item ${t.done?'done':''} ${t.flag?'f-'+t.flag:''}" data-id="${t.id}">
+    <button class="chk" data-a="done" aria-label="Complete">${t.done?'✓':''}</button>
+    <div class="body"><div class="t">${esc(t.title)}</div><div class="meta">${[t.due&&`<span class="${dueCls(t.due)}">Due ${t.due}</span>`,t.assigned&&'Assigned to me',t.myDay&&view!=='myday'&&'My Day',t.type==='email'&&'Email',t.flag&&`<span class="chip ${t.flag}">${cap(t.flag)}</span>`].filter(Boolean).join(' · ')}</div></div>
+    <button class="ib flag ${t.flag||'none'}" data-a="flag" title="${t.flag?FLAGS[t.flag]+' – click to change flag':'Add flag'}" aria-label="Change flag">${t.flag?'⚑':'⚐'}</button>
+    <button class="ib star ${t.important?'on':''}" data-a="star" title="Mark important">${t.important?'★':'☆'}</button>
+    <button class="ib" data-a="del" title="Delete">✕</button></div>`).join(''):'<div class="empty">Nothing here yet. Add your first item above.</div>';
+}
+document.addEventListener('click',async e=>{
+  const v=e.target.closest('[data-v]'),d=e.target.closest('[data-del]'),f=e.target.closest('[data-f]'),a=e.target.closest('[data-a]');
+  if(d){e.stopPropagation();if(confirm('Delete this list and its tasks?')){await api('DELETE','lists/'+d.dataset.del);view='myday'}return load()}
+  if(v){view=v.dataset.v;return render()}
+  if(f){fl=f.dataset.f;return render()}
+  if(a){const id=a.closest('.item').dataset.id,t=D.tasks.find(x=>x.id===id);
+    if(a.dataset.a==='del')await api('DELETE','tasks/'+id);
+    if(a.dataset.a==='done')await api('PATCH','tasks/'+id,{done:!t.done});
+    if(a.dataset.a==='star')await api('PATCH','tasks/'+id,{important:!t.important});
+    if(a.dataset.a==='flag'){const seq=t.type==='email'?FKEYS:[null,...FKEYS],i=seq.indexOf(t.flag||null);await api('PATCH','tasks/'+id,{flag:seq[(i+1)%seq.length]})}
+    load()}
+});
+$('#add').addEventListener('submit',async e=>{e.preventDefault();const title=$('#in').value.trim();if(!title)return;
+  const b={title};
+  if(view==='myday')b.myDay=true;if(view==='important')b.important=true;if(view==='planned')b.due=$('#due').value;
+  if(view==='assigned')b.assigned=true;if(view==='email')b.type='email';
+  b.flag=$('#fg').value||null;
+  if(view.startsWith('l:'))b.listId=view.slice(2);
+  await api('POST','tasks',b);load()});
+$('#newlist').addEventListener('submit',async e=>{e.preventDefault();const name=$('#ln').value.trim();if(!name)return;
+  const l=await api('POST','lists',{name});$('#ln').value='';view='l:'+l.id;load()});
+function theme(t){document.documentElement.dataset.theme=t;localStorage.setItem('theme',t);$('#theme').textContent=t==='dark'?'Light':'Dark'}
+$('#theme').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+theme(localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+load();
+</script>
+</body>
+</html>
