@@ -2,7 +2,7 @@ services:
   - type: web
     name: todo-app
     runtime: node
-    plan: starter          # persistent disks need a paid plan; free plan loses data on restart
+    plan: starter 
     buildCommand: echo ok
     startCommand: node server.js
     healthCheckPath: /health
